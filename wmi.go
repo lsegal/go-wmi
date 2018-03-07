@@ -31,13 +31,12 @@ import (
 	"log"
 	"os"
 	"reflect"
-	"runtime"
 	"strconv"
 	"strings"
 	"sync"
 	"time"
 
-	"github.com/go-ole/go-ole"
+	ole "github.com/go-ole/go-ole"
 	"github.com/go-ole/go-ole/oleutil"
 )
 
@@ -135,10 +134,8 @@ func (c *Client) Query(query string, dst interface{}, connectServerArgs ...inter
 
 	lock.Lock()
 	defer lock.Unlock()
-	runtime.LockOSThread()
-	defer runtime.UnlockOSThread()
 
-	err := ole.CoInitializeEx(0, ole.COINIT_MULTITHREADED)
+	err := ole.CoInitialize(0)
 	if err != nil {
 		oleCode := err.(*ole.OleError).Code()
 		if oleCode != ole.S_OK && oleCode != S_FALSE {
